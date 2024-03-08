@@ -100,3 +100,6 @@ $app->get('/', function (Request $request, Response $response, $args) {
 //A Slim futtatása
 $app->run();
 
+//Forrás: https://www.slimframework.com/docs/v4/objects/application.html - 2024.03.08 - 8:07 - Slim Dokumentáció
+//Forrás: https://www.slimframework.com/docs/v4/objects/application.html - 2024.03.08 - 8:07 - Slim Dokumentáció
+//Forrás: https://laravel.com/docs/5.0/schema - 2024.03.08 - 9:17 - Laravel
