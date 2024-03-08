@@ -38,7 +38,6 @@ if (!Capsule::schema()->hasTable('todos')) {
 $app = AppFactory::create();
 
 // Todo osztály definiálása
-// Todo osztály definiálása
 class Todo extends \Illuminate\Database\Eloquent\Model
 {
 }
@@ -51,17 +50,20 @@ $app->get('/api/todos', function (Request $request, Response $response, $args) {
 });
 
 
-// POST kérés, új ToDo létrehozása
+// POST, új ToDo létrehozása
 $app->post('/api/todos', function (Request $request, Response $response, $args) {
     $data = $request->getParsedBody();
     $todo = new Todo;
     $todo->category = $data['category'] ?? '';
     $todo->description = $data['description'] ?? '';
     $todo->save();
-    return $response->withJson(['message' => 'Todo sikeresen hozzáadva!']);
+    $responseData = ['message' => 'Todo sikeresen hozzáadva!'];
+    $response->getBody()->write(json_encode($responseData));
+    return $response->withHeader('Content-Type', 'application/json');
 });
 
-// PUT kérés, ToDo módosítása
+
+// PUT, ToDo módosítása
 $app->put('/api/todos/{id}', function (Request $request, Response $response, $args) {
     $id = $args['id'];
     $data = $request->getParsedBody();
@@ -75,7 +77,7 @@ $app->put('/api/todos/{id}', function (Request $request, Response $response, $ar
     return $response->withJson(['message' => 'Todo sikeresen módosítva!']);
 });
 
-// DELETE kérés, ToDo törlése
+// DELETE, ToDo törlése
 $app->delete('/api/todos/{id}', function (Request $request, Response $response, $args) {
     $id = $args['id'];
     $todo = Todo::find($id);
