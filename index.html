@@ -43,6 +43,15 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            background-color: #fff;
+            border: 1px solid rgba(0, 0, 0, 0.125);
+            border-radius: 5px;
+            margin-bottom: 10px;
+            padding: 10px;
+        }
+
+        .list-group-item:hover {
+            background-color: rgba(0, 123, 255, 0.1);
         }
 
         .btn-edit, .btn-delete {
@@ -57,6 +66,14 @@
         .btn-delete {
             background-color: #dc3545;
             border-color: #dc3545;
+        }
+
+        .btn-edit:hover, .btn-delete:hover {
+            filter: brightness(0.8);
+        }
+
+        .btn-success, .btn-danger {
+            transition: all 0.3s ease;
         }
     </style>
 </head>
@@ -97,8 +114,8 @@
                 $("#todoList").empty();
                 todos.forEach(function (todo) {
                     var listItem = $(`<li class="list-group-item">${todo.category}: ${todo.description}</li>`);
-                    var editButton = $(`<button type="button" class="btn btn-primary btn-sm mr-2">Szerkesztés</button>`);
-                    var deleteButton = $(`<button type="button" class="btn btn-danger btn-sm">Törlés</button>`);
+                    var editButton = $(`<button type="button" class="btn btn-primary btn-sm btn-edit me-2">Szerkesztés</button>`);
+                    var deleteButton = $(`<button type="button" class="btn btn-danger btn-sm btn-delete">Törlés</button>`);
                     listItem.append(editButton);
                     listItem.append(deleteButton);
                     $("#todoList").append(listItem);
@@ -107,9 +124,9 @@
                     editButton.click(function () {
                         var category = todo.category;
                         var description = todo.description;
-                        var editInput = $(`<input type="text" class="form-control mr-2" value="${category}">`);
-                        var editTextArea = $(`<textarea class="form-control">${description}</textarea>`);
-                        var saveButton = $(`<button type="button" class="btn btn-success btn-sm">Mentés</button>`);
+                        var editInput = $(`<input type="text" class="form-control mb-2" value="${category}">`);
+                        var editTextArea = $(`<textarea class="form-control mb-2">${description}</textarea>`);
+                        var saveButton = $(`<button type="button" class="btn btn-success btn-sm me-2">Mentés</button>`);
 
                         // Helyettesítsük a szöveges mezőket szerkesztési mezőkkel
                         listItem.empty();
@@ -174,5 +191,3 @@
     </script>
 </body>
 </html>
-
-
