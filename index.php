@@ -27,6 +27,8 @@ if (!Capsule::schema()->hasTable('todos')) {
     });
 }
 
+//Forrás: https://laravel.com/docs/5.0/schema - 2024.03.08 - 9:17 - Laravel
+
 //Létrehozzuk az alkalmazást
 $app = AppFactory::create();
 
