@@ -3,6 +3,7 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\Factory\AppFactory;
 use Illuminate\Database\Capsule\Manager as Capsule;
+use App\Models\Todo; //Models mappában levő class importálása
 
 require __DIR__ . '/vendor/autoload.php';
 
