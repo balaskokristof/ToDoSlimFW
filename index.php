@@ -3,7 +3,14 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\Factory\AppFactory;
 use Illuminate\Database\Capsule\Manager as Capsule;
-use App\Models\Todo;
+
+header('Access-Control-Allow-Origin: http://127.0.0.1:5500');
+header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
+header('Access-Control-Allow-Headers: Content-Type, Authorization');
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    header('HTTP/1.1 200 OK');
+    exit();
+}
 
 require __DIR__ . '/vendor/autoload.php';
 
@@ -30,11 +37,19 @@ if (!Capsule::schema()->hasTable('todos')) {
 // Slim alkalmazás létrehozása
 $app = AppFactory::create();
 
+// Todo osztály definiálása
+// Todo osztály definiálása
+class Todo extends \Illuminate\Database\Eloquent\Model
+{
+}
+
 // GET kérés, a ToDo-k lekérése
 $app->get('/api/todos', function (Request $request, Response $response, $args) {
-    $todos = Todo::all();
-    return $response->withJson($todos);
+    $todos = Todo::all()->toArray(); // Eloquent gyűjtemény konvertálása tömbbé
+    $response->getBody()->write(json_encode($todos)); // JSON írása
+    return $response->withHeader('Content-Type', 'application/json');
 });
+
 
 // POST kérés, új ToDo létrehozása
 $app->post('/api/todos', function (Request $request, Response $response, $args) {
@@ -73,6 +88,3 @@ $app->delete('/api/todos/{id}', function (Request $request, Response $response, 
 
 //A Slim futtatása
 $app->run();
-//Forrás: https://akrabat.com/receiving-input-into-a-slim-4-application/ 2024.03.08 11:26 - Rob Allen
-//Forrás: https://laravel.com/docs/5.0/schema - 2024.03.08 - 9:17 - Laravel
-//Forrás: https://www.slimframework.com/docs/v4/objects/application.html - 2024.03.08 - 8:07 - Slim Dokumentáció

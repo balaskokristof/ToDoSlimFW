@@ -39,7 +39,7 @@
     // Funkció a ToDo-k lekérdezésére és megjelenítésére az oldalon
     function fetchTodos() {
         $.ajax({
-            url: "/api/todos",
+            url: "http://localhost:8000/api/todos",
             method: "GET",
             success: function (todos) {
                 $("#todoList").empty();
