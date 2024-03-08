@@ -16,6 +16,17 @@ $capsule->addConnection([
 $capsule->setAsGlobal();
 $capsule->bootEloquent();
 
+//todos tábla létrehozása
+if (!Capsule::schema()->hasTable('todos')) {
+    Capsule::schema()->create('todos', function ($table) {
+        $table->increments('id');
+        $table->string('title');
+        $table->text('description')->nullable();
+        $table->boolean('completed')->default(false);
+        $table->timestamps();
+    });
+}
+
 //Létrehozzuk az alkalmazást
 $app = AppFactory::create();
 
