@@ -1,10 +1,20 @@
 <?php
-//A Slim keretrendszer betöltése
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\Factory\AppFactory;
+use Illuminate\Database\Capsule\Manager as Capsule;
 
 require __DIR__ . '/vendor/autoload.php';
+
+// Adatbázis inicializálása
+$capsule = new Capsule;
+$capsule->addConnection([
+    'driver' => 'sqlite',
+    'database' => __DIR__ . '/database.sqlite',
+    'prefix' => '',
+]);
+$capsule->setAsGlobal();
+$capsule->bootEloquent();
 
 //Létrehozzuk az alkalmazást
 $app = AppFactory::create();
