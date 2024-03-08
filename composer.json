@@ -1,0 +1,20 @@
+{
+    "name": "kristofbalasko/to-do-slim-fw",
+    "description": "Egy ToDo API, PHP megvalósítással és Slim Framework segítségével",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Kristofbalasko\\ToDoSlimFw\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Kristof Balasko",
+            "email": "kristof@balaskokristof.hu"
+        }
+    ],
+    "require": {
+        "slim/slim": "^4.0",
+        "guzzlehttp/psr7": "^2.6"
+    }
+}
