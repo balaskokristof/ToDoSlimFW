@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ToDo Lista</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="mb-4">ToDo Lista</h1>
+        <!-- Űrlap egy új ToDo hozzáadásához -->
+        <form id="addTodoForm">
+            <div class="form-group">
+                <label for="category">Kategória:</label>
+                <input type="text" class="form-control" id="category" name="category">
+            </div>
+            <div class="form-group">
+                <label for="description">Leírás:</label>
+                <textarea class="form-control" id="description" name="description"></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">ToDo Hozzáadása</button>
+        </form>
+        <hr>
+        <h2>ToDo Lista</h2>
+        <!-- ToDo-k dinamikusan ide kerülnek -->
+        <ul id="todoList" class="list-group">
+        </ul>
+    </div>
+
+    <!-- jQuery és Bootstrap fájlok -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+    // Funkció a ToDo-k lekérdezésére és megjelenítésére az oldalon
+    function fetchTodos() {
+        $.ajax({
+            url: "/api/todos",
+            method: "GET",
+            success: function (todos) {
+                $("#todoList").empty();
+                todos.forEach(function (todo) {
+                    $("#todoList").append(`<li class="list-group-item">${todo.category}: ${todo.description}</li>`);
+                });
+            },
+            error: function (xhr, status, error) {
+                console.error("Hiba történt a ToDo-k lekérdezése közben:", error);
+            }
+        });
+    }
+
+    // ToDo-k inicializálása az oldal betöltésekor
+    fetchTodos();
+
+    // Eseményfigyelő a űrlap beküldésére, új ToDo hozzáadásához
+    $("#addTodoForm").submit(function (event) {
+        event.preventDefault();
+        var category = $("#category").val();
+        var description = $("#description").val();
+        $.post("/api/todos", { category: category, description: description }, function (data) {
+            fetchTodos(); // ToDo lista frissítése új ToDo hozzáadása után
+            $("#category").val(""); // Űrlapmezők ürítése
+            $("#description").val("");
+        });
+    });
+});
+    </script>
+</body>
+</html>

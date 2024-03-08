@@ -16,6 +16,6 @@
     "require": {
         "slim/slim": "^4.0",
         "guzzlehttp/psr7": "^2.6",
-        "illuminate/database": "^10.47"
+        "illuminate/database": "^8.0"
     }
 }
