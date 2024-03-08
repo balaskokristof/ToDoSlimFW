@@ -99,3 +99,4 @@ $app->get('/', function (Request $request, Response $response, $args) {
 
 //A Slim futtatása
 $app->run();
+
