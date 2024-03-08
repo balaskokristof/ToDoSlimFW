@@ -7,7 +7,11 @@ use Illuminate\Database\Capsule\Manager as Capsule;
 header('Access-Control-Allow-Origin: http://127.0.0.1:5500');
 header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type, Authorization');
+
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    header('Access-Control-Allow-Origin: *');
+    header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
+    header('Access-Control-Allow-Headers: Content-Type, Authorization');
     header('HTTP/1.1 200 OK');
     exit();
 }
@@ -38,7 +42,6 @@ if (!Capsule::schema()->hasTable('todos')) {
 $app = AppFactory::create();
 
 // Todo osztály definiálása
-// Todo osztály definiálása
 class Todo extends \Illuminate\Database\Eloquent\Model
 {
 }
@@ -50,18 +53,19 @@ $app->get('/api/todos', function (Request $request, Response $response, $args) {
     return $response->withHeader('Content-Type', 'application/json');
 });
 
-
-// POST kérés, új ToDo létrehozása
+// POST, új ToDo létrehozása
 $app->post('/api/todos', function (Request $request, Response $response, $args) {
     $data = $request->getParsedBody();
     $todo = new Todo;
     $todo->category = $data['category'] ?? '';
     $todo->description = $data['description'] ?? '';
     $todo->save();
-    return $response->withJson(['message' => 'Todo sikeresen hozzáadva!']);
+    $responseData = ['message' => 'Todo sikeresen hozzáadva!'];
+    $response->getBody()->write(json_encode($responseData));
+    return $response->withHeader('Content-Type', 'application/json');
 });
 
-// PUT kérés, ToDo módosítása
+// PUT, ToDo módosítása
 $app->put('/api/todos/{id}', function (Request $request, Response $response, $args) {
     $id = $args['id'];
     $data = $request->getParsedBody();
@@ -75,7 +79,7 @@ $app->put('/api/todos/{id}', function (Request $request, Response $response, $ar
     return $response->withJson(['message' => 'Todo sikeresen módosítva!']);
 });
 
-// DELETE kérés, ToDo törlése
+// DELETE, ToDo törlése
 $app->delete('/api/todos/{id}', function (Request $request, Response $response, $args) {
     $id = $args['id'];
     $todo = Todo::find($id);
@@ -84,6 +88,13 @@ $app->delete('/api/todos/{id}', function (Request $request, Response $response, 
     }
     $todo->delete();
     return $response->withJson(['message' => 'Todo sikeresen törölve!']);
+});
+
+// HTML megjelenítése és interakció kezelése
+$app->get('/', function (Request $request, Response $response, $args) {
+    $htmlContent = file_get_contents('index.html');
+    $response->getBody()->write($htmlContent);
+    return $response;
 });
 
 //A Slim futtatása

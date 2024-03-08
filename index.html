@@ -6,6 +6,59 @@
     <title>ToDo Lista</title>
     <!-- Bootstrap CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: auto;
+            padding: 30px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1, h2 {
+            text-align: center;
+            color: #007bff;
+        }
+
+        form {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            font-weight: bold;
+        }
+
+        ul.list-group {
+            margin-top: 20px;
+        }
+
+        .list-group-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .btn-edit, .btn-delete {
+            cursor: pointer;
+        }
+
+        .btn-edit {
+            background-color: #28a745;
+            border-color: #28a745;
+        }
+
+        .btn-delete {
+            background-color: #dc3545;
+            border-color: #dc3545;
+        }
+    </style>
 </head>
 <body>
     <div class="container mt-5">
@@ -44,7 +97,58 @@
             success: function (todos) {
                 $("#todoList").empty();
                 todos.forEach(function (todo) {
-                    $("#todoList").append(`<li class="list-group-item">${todo.category}: ${todo.description}</li>`);
+                    var listItem = $(`<li class="list-group-item">${todo.category}: ${todo.description}</li>`);
+                    var editButton = $(`<button type="button" class="btn btn-primary btn-sm mr-2">Szerkesztés</button>`);
+                    var deleteButton = $(`<button type="button" class="btn btn-danger btn-sm">Törlés</button>`);
+                    listItem.append(editButton);
+                    listItem.append(deleteButton);
+                    $("#todoList").append(listItem);
+
+                    // Szerkesztés gomb eseménykezelője
+                    editButton.click(function () {
+                        var category = todo.category;
+                        var description = todo.description;
+                        var editInput = $(`<input type="text" class="form-control mr-2" value="${category}">`);
+                        var editTextArea = $(`<textarea class="form-control">${description}</textarea>`);
+                        var saveButton = $(`<button type="button" class="btn btn-success btn-sm">Mentés</button>`);
+
+                        // Helyettesítsük a szöveges mezőket szerkesztési mezőkkel
+                        listItem.empty();
+                        listItem.append(editInput);
+                        listItem.append(editTextArea);
+                        listItem.append(saveButton);
+
+                        // Mentés gomb eseménykezelője
+                        saveButton.click(function () {
+                            var updatedCategory = editInput.val();
+                            var updatedDescription = editTextArea.val();
+                            $.ajax({
+                                url: `http://localhost:8000/api/todos/${todo.id}`,
+                                method: "PUT",
+                                data: { category: updatedCategory, description: updatedDescription },
+                                success: function () {
+                                    fetchTodos(); // Frissítsük a ToDo listát a módosítások után
+                                },
+                                error: function (xhr, status, error) {
+                                    console.error("Hiba történt a ToDo módosítása közben:", error);
+                                }
+                            });
+                        });
+                    });
+
+                    // Törlés gomb eseménykezelője
+                    deleteButton.click(function () {
+                        $.ajax({
+                            url: `http://localhost:8000/api/todos/${todo.id}`,
+                            method: "DELETE",
+                            success: function () {
+                                fetchTodos(); // Frissítsük a ToDo listát a törlés után
+                            },
+                            error: function (xhr, status, error) {
+                                console.error("Hiba történt a ToDo törlése közben:", error);
+                            }
+                        });
+                    });
                 });
             },
             error: function (xhr, status, error) {
@@ -61,7 +165,7 @@
         event.preventDefault();
         var category = $("#category").val();
         var description = $("#description").val();
-        $.post("/api/todos", { category: category, description: description }, function (data) {
+        $.post("http://localhost:8000/api/todos", { category: category, description: description }, function (data) {
             fetchTodos(); // ToDo lista frissítése új ToDo hozzáadása után
             $("#category").val(""); // Űrlapmezők ürítése
             $("#description").val("");
@@ -71,3 +175,4 @@
     </script>
 </body>
 </html>
+
