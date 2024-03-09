@@ -46,7 +46,7 @@ Ez a projekt egy egyszerű ToDo lista alkalmazást valósít meg, amely lehetőv
 
 ## Készítő
 
-- Balaskő Kristóf
+- Balaskó Kristóf
 
 ## Licenc
 
