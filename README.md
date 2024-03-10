@@ -1,6 +1,7 @@
 # ToDo Lista alkalmazás
 
 Ez a projekt egy egyszerű ToDo lista alkalmazást valósít meg, amely lehetővé teszi, hogy teendőket hozz létre, modosítsad őket, és törölheted is őket.
+közel 16 órát szenvedtem vele, Noel wtf
 
 ## Telepítés
 
